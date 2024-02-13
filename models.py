@@ -39,10 +39,12 @@ class Item(BaseModel):
         }
     }
 
+
 class BaseUser(BaseModel):
-    name: str
-    email: str
+    username: str
+    email: Union[str, None] = None
     full_name: Union[str, None] = None
+    disabled: Union[bool, None] = None
 
 
 class UserIn(BaseUser):
@@ -50,7 +52,7 @@ class UserIn(BaseUser):
 
 
 class UserInDB(BaseUser):
-    hash_password: str
+    hashed_password: str
 
 
 class UserOut(BaseUser):

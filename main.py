@@ -1,10 +1,13 @@
 from typing import Union, List, Any
 from typing_extensions import Annotated
 
-from fastapi import FastAPI, Query, Request, Response, status, Form, UploadFile, File, HTTPException
+from fastapi import (FastAPI, Query, Request,
+                     Response, status, Form,
+                     UploadFile, File, HTTPException,
+                     Depends, Header)
 from fastapi.responses import RedirectResponse, JSONResponse, HTMLResponse, PlainTextResponse
 from fastapi.exceptions import RequestValidationError
-
+from fastapi.security import OAuth2PasswordBearer
 
 from models import BaseUser, UserIn, UserInDB, UserOut, Item
 
@@ -163,5 +166,50 @@ async def validation_exception_handler(request, exc):
 
 
 @app.get("/unicorns/{name}")
-async def read_unicorn(name: int):
-    return {"message": f"{name} is a good boy"}
+async def read_unicorn(name: int, server: Annotated[str, Header()]):
+    return {"message": f"{name} is a good boy {server}"}
+
+
+# Dependencies
+
+async def common_parameters(
+        q: Union[str, None] = None, skip: int = 0, limit: int = 100
+):
+    return {"q": q, "skip": skip, "limit": limit + 12}
+
+
+@app.get("/users/")
+async def read_users(common: Annotated[dict, Depends(common_parameters)]):
+    return common
+
+
+# Помимо добавления в агрументы функции, зависимости можно включать в декораторы пути.
+# В этом случае значения, возвращаемые вызываемым объектом, не используються
+# Их можно глобално кастить к приложению. ТАк они подействую на все декораторы пути
+# Также можно использовать yield вместо return.
+# Например, в случае если нужно выполнить операции после возвращения значения
+
+# Security
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+@app.get("/person/", tags=["security"])
+async def read_person(token: Annotated[str, Depends(oauth2_scheme)]):
+    return {"token": token}
+
+
+# def fake_decode_token(token):
+#     return User(
+#         username=token+"BLABLA", email="alex@mail.ru", full_name="Alex"
+#     )
+
+
+# async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+#     user = fake_decode_token(token)
+#     return user
+
+
+# @app.get("/users/me", tags=["security"])
+# async def read_users_me(current_user: Annotated[User, Depends(get_current_user)]):
+#     return current_user

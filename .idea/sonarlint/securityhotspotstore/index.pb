@@ -7,3 +7,15 @@ W
 'venv/Lib/site-packages/pydantic/main.py,5\9\59d22b461cc08e7414848c6f70c2749424d4d3cd
 9
 	models.py,8\5\85f64e80ba345158acc186d4505f039d4f21420f
+C
+sql_app/__init__.py,b\e\bedf14b18daa3929f9beb085599958d00af3a8c0
+?
+sql_app/crud.py,9\1\91af7c93a857d40339065f686af45d424c75153d
+C
+sql_app/database.py,0\e\0efaae0bf48333ae1fcf01ca5d688ef1273fecdd
+A
+sql_app/models.py,1\3\134773ec031c3ab008350b186a3d50edfdd1c2f0
+B
+sql_app/schemas.py,2\b\2bdc129bbdbade6a341bf5648d36bf4f5c6b859e
+?
+sql_app/main.py,6\9\69ac49bccba61a68ce97d5e42bce39d9f39ede95
